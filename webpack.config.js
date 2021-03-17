@@ -7,6 +7,7 @@
  */
 const HtmlWebpackPliugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const {
   resolve
 } = require("path");
@@ -83,6 +84,22 @@ module.exports = {
         test: /\.html$/,
         //处理html文件img图片(负责引入这个图片，从而能被url-loader处理)
         loader: 'html-loader',
+      },
+      /*
+        语法检查 eslint-loader eslint
+            注意：只检查自己写的源代码。第三方库不检查
+            设置检查规则
+              package.json中的"eslintConfig"配置
+              airbnb --> eslint-config-airbnb-base eslint-plugin-import eslint
+      */
+      {
+        test:/\.js$/,
+        exclude:/node_modules/,
+        loader:'eslint-loader',
+        options:{
+          //自动修复eslint错误
+          fix:true
+        }
       }
     ]
   },
@@ -92,15 +109,15 @@ module.exports = {
       title: "chengzhuo app",
       template: resolve(__dirname, "src/index.html")
     }),
-
     new MiniCssExtractPlugin({
       filename: 'css/chengzhuo.css'
-    })
+    }),
+    //压缩css 代码压缩
+    new OptimizeCssAssetsWebpackPlugin()
   ],
   //模式
   // mode:"production"
   mode: "development",
-
   //开发服务器devServer 用来自动化（自动编译，自动刷新浏览器，自动打开浏览器）
   //只在内存中编译打包不会有任何输出
   //启动devServer指令为webpack-dev-server
