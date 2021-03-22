@@ -92,14 +92,47 @@ module.exports = {
               package.json中的"eslintConfig"配置
               airbnb --> eslint-config-airbnb-base eslint-plugin-import eslint
       */
+      // {
+      //   test:/\.js$/,
+      //   exclude:/node_modules/,
+      //   loader:'eslint-loader',
+      //   options:{
+      //     //自动修复eslint错误
+      //     fix:true
+      //   }
+      // },
       {
-        test:/\.js$/,
-        exclude:/node_modules/,
-        loader:'eslint-loader',
-        options:{
-          //自动修复eslint错误
-          fix:true
-        }
+        /*
+          js兼容性处理 babe-loader  @babel/preset-env
+            1.基本的js兼容性处理  --> @babel/preset-env
+              问题：只能转换基本语法，如Promise不能转换
+            2.全部js的兼容性处理  -->@babel/polyfill;
+              问题：我只要解决部分兼容性处理，但是将所有的兼容性代码引入，体积太大！
+            3.需要做兼容性处理的就做：按需加载  -->corejs
+        */
+       test:/\.js$/,
+       exclude:/node_modules/,
+       loader:'babel-loader',
+       options:{
+         //预设  指示babel会进行怎样的兼容性处理
+         presets:[
+           [
+            '@babel/preset-env',
+            {
+              //按需加载  
+              useBuiltIns:'usage',
+              //指定core-js的版本
+              corejs:{
+                version:3
+              },
+              //指定兼容性做到哪个版本的兼容性
+              targets:{
+                ie:'9'
+              }
+            }
+           ]
+         ]
+       }
       }
     ]
   },
