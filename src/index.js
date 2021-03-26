@@ -8,7 +8,8 @@
 */
 import './fontIcon/iconfont.css';
 import './index.css';
-import './index.less'; // import '@babel/polyfill';
+import './index.less';
+import '@babel/polyfill';
 
 const add = function add(x, y) {
   return x + y;
